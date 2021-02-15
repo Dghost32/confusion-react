@@ -1,81 +1,59 @@
-import React, { useState } from 'react'
-import {
-    Media,
-    Row,
-    Navbar
-} from "react-bootstrap";
+import React, { useState } from "react";
+import { Card } from "react-bootstrap";
 
-let Menu = () => {
+let Menu = ({ dishes }) => {
+  const [selectedDish, setSelectedDish] = useState(null);
 
-    const dishes = [
-        {
-            id: 0,
-            name: 'Uthappizza',
-            image: 'assets/images/uthappizza.png',
-            category: 'mains',
-            label: 'Hot',
-            price: '4.99',
-            description: 'A unique combination of Indian Uthappam (pancake) and Italian pizza, topped with Cerignola olives, ripe vine cherry tomatoes, Vidalia onion, Guntur chillies and Buffalo Paneer.'
-        },
-        {
-            id: 1,
-            name: 'Zucchipakoda',
-            image: 'assets/images/zucchipakoda.png',
-            category: 'appetizer',
-            label: '',
-            price: '1.99',
-            description: 'Deep fried Zucchini coated with mildly spiced Chickpea flour batter accompanied with a sweet-tangy tamarind sauce'
-        },
-        {
-            id: 2,
-            name: 'Vadonut',
-            image: 'assets/images/vadonut.png',
-            category: 'appetizer',
-            label: 'New',
-            price: '1.99',
-            description: 'A quintessential ConFusion experience, is it a vada or is it a donut?'
-        },
-        {
-            id: 3,
-            name: 'ElaiCheese Cake',
-            image: 'assets/images/elaicheesecake.png',
-            category: 'dessert',
-            label: '',
-            price: '2.99',
-            description: 'A delectable, semi-sweet New York Style Cheese Cake, with Graham cracker crust and spiced with Indian cardamoms'
-        }
-    ];
+  let onDishSelect = (dish) => setSelectedDish(dish);
 
-    const menu = dishes.map(dish => (
-        <div key={dish.id} className="col-12 mt-5">
-            <div className="col-12">
-                <div className="row">
-                    <img
-                        width={64}
-                        height={64}
-                        className="col-auto"
-                        src={dish.image}
-                        alt={dish.name}
-                    />
-                    <div className="col text-center">
-                        <h5>{dish.name}</h5>
-                        <p>{dish.description}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    ));
+  let renderDish = (dish) => {
+    if (dish === null) return <div></div>;
+    let { id, name, image, description } = dish;
+    return (
+      <Card
+        onClick={() => onDishSelect(dish)}
+        key={id}
+        className="col-11"
+      >
+        <Card.Img variant="top" src={image} />
+        <Card.Body>
+          <Card.Title>{name}</Card.Title>
+          <Card.Text>{description}</Card.Text>
+        </Card.Body>
+      </Card>
+    );
+  };
+
+  const menu = dishes.map((dish) => {
+    let { id, name, image, description } = dish;
 
     return (
-        <div className="container">
+      <Card
+        onClick={() => onDishSelect(dish)}
+        key={id}
+        className="col-12 col-md-5 m-1"
+      >
+        <Card.Img variant="top" src={image} />
+        <Card.Body>
+          <Card.Title>{name}</Card.Title>
+          <Card.Text>{description}</Card.Text>
+        </Card.Body>
+      </Card>
+    );
+  });
 
-            {/* menu row */}
-            <div className="row">
-                {/* menu list */}
-                {menu}
-            </div>
-        </div>
-    )
-}
+  return (
+    <div className="container">
+      {/* menu row */}
+      <div className="row">
+        {/* menu list */}
+        {menu}
+      </div>
+      <div className="row">
+        {renderDish(selectedDish)}
+      </div>
+    </div>
+  );
+};
 
 export default Menu;

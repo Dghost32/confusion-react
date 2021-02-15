@@ -1,29 +1,25 @@
-import './App.css';
-import React from 'react';
-import Menu from './Components/MenuComponent'
-import {
-  Container,
-  Navbar,
-  Row
-} from 'react-bootstrap'
+import "./App.css";
+import React from "react";
+import Menu from "./Components/MenuComponent";
+import { DISHES } from "./shared/dishes";
+import { Navbar } from "react-bootstrap";
 
 function App() {
   return (
     <div className="App">
-
       {/* Navbar */}
       <Navbar bg="primary" variant="dark">
-        <Container>
+        <div className="container-fluid">
           <Navbar.Brand>Ristorante con fusion</Navbar.Brand>
-        </Container>
+        </div>
       </Navbar>
 
       {/* Body */}
-      <Container>
-        <Row>
-          <Menu />
-        </Row>
-      </Container>
+      <div className="container">
+        <div className="row">
+          <Menu dishes={DISHES} />
+        </div>
+      </div>
     </div>
   );
 }
