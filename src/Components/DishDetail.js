@@ -26,7 +26,7 @@ let DishDetail = ({ dish }) => {
       <div className="col-12 col-md-5 m-1 border">
         <DishCard detailed key={dish.id} dish={dish} />
       </div>
-      <div className="col-12 m-1 col-md-5 m-1 border">
+      <div className="col-12 m-1 col-md-5 m-1">
         <h1 className="d-block">Comments</h1>
         {comments ? showComments : ""}
       </div>
