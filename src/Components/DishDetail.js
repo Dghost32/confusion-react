@@ -1,35 +1,15 @@
 import React from "react";
 import DishCard from "./DishCard";
+import DishComments from "./DishComments";
 
 let DishDetail = ({ dish }) => {
-  let { comments } = dish;
-
-  let showComments = comments.map((c) => {
-    let { id, comment, author, date } = c;
-
-    return (
-      <div  key={id}>
-        <blockquote  className="blockquote m-2">
-          <p className="mb-0">&gt;{comment}</p>
-          <footer className="blockquote-footer mt-1">
-            <cite title="Source Title">
-              {author}, {date.substring(0, 10)}
-            </cite>
-          </footer>
-        </blockquote>
-      </div >
-    );
-  });
+  if (!dish) return <div></div>;
+  let { comments, id } = dish;
 
   return (
-    <div className="row justify-content-center" key={dish.id}>
-      <div className="col-12 col-md-5 m-1 border">
-        <DishCard detailed key={dish.id} dish={dish} />
-      </div>
-      <div className="col-12 m-1 col-md-5 m-1">
-        <h1 className="d-block">Comment sections</h1>
-        {comments ? showComments : ""}
-      </div>
+    <div className="row justify-content-center" key={id}>
+      <DishCard detailed key={id} dish={dish} />
+      <DishComments comments={comments} />
     </div>
   );
 };
