@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from "react";
-import MenuCard from "./MenuCard";
+import DishCard from "./DishCard";
+import DishDetail from "./DishDetail";
 
 let Menu = ({ dishes }) => {
   const [selectedDish, setSelectedDish] = useState(null);
 
-  useEffect(()=> {
-    console.log('menu component did mount');
-  }, [])
+  useEffect(() => {
+    console.log("menu component did mount");
+  }, []);
 
   let onDishSelect = (dish) => setSelectedDish(dish);
 
   let renderDish = (dish) => {
     if (dish === null) return <div></div>;
-    return (
-      <div className="col-12 col-md-6 border">
-        <MenuCard key={dish.id} dish={dish} />
-      </div>
-    );
+    return <DishDetail key={dish.id} dish={dish} />;
   };
 
   const menu = dishes.map((dish) => (
-    <div key={dish.id} className="col-12 col-md-4 m-1 border" onClick={() => onDishSelect(dish)}>
-      <MenuCard dish={dish} />
+    <div
+      key={dish.id}
+      className="col-12 col-md-5 m-1 border"
+      onClick={() => onDishSelect(dish)}
+    >
+      <DishCard dish={dish} />
     </div>
   ));
 
@@ -32,9 +33,7 @@ let Menu = ({ dishes }) => {
         {/* menu list */}
         {menu}
       </div>
-      <div className="row justify-content-center">
-        {renderDish(selectedDish)}
-      </div>
+      {renderDish(selectedDish)}
     </div>
   );
 };
