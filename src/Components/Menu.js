@@ -10,7 +10,7 @@ let Menu = ({ dishes, callback }) => {
     <DishCard key={dish.id} dish={dish} callback={callback} />
   ));
 
-  return <div className="row justify-content-center">{menu}</div>;
+  return <div className="row justify-content-left">{menu}</div>;
 };
 
 export default Menu;
