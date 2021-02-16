@@ -1,26 +1,47 @@
 import React, { useState } from "react";
-import Menu from "./Menu";
-import Header from './Header'
-import Footer from './Footer'
-import DishDetail from "./DishDetail";
+import Header from "./Header";
+import Footer from "./Footer";
+import MenuPage from "./Pages/MenuPage";
+import HomePage from "./Pages/HomePage";
+import AboutUsPage from './Pages/AboutUsPage';
+import ContactUsPage from './Pages/ContactUsPage';
 import { DISHES } from "../shared/dishes";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+} from "react-router-dom";
+import { Navbar, Nav } from "react-bootstrap";
 
 function Main() {
-  let [selectedDish, setSelectedDish] = useState(undefined);
+  const [selectedDish, setSelectedDish] = useState(undefined);
 
   return (
-    <div className="App">
-      <Header/>
-
-      <div className="container">
-        {/* MENU - ROW */}
-        <Menu callback={(dish) => setSelectedDish(dish)} dishes={DISHES} />
-        {/* SELECTED DISH DETAILS - ROW */}
-        <DishDetail dish={selectedDish} />
-      </div>
-
-      <Footer/>
-    </div>
+    <>
+      <Router>
+        <>
+          <Header />
+          <Switch>
+            <Route exact path="/">
+              <HomePage />
+            </Route>
+            <Route path="/aboutus">
+              <AboutUsPage/>
+            </Route>
+            <Route path="/menu">
+              <MenuPage dishes={DISHES} callback={(dish)=>setSelectedDish(dish)} selectedDish={selectedDish}/>
+            </Route>
+            <Route path="/contactus">
+              <ContactUsPage/>
+            </Route>
+            <Redirect to="/" />
+          </Switch>
+          <Footer />
+        </>
+      </Router>
+    </>
   );
 }
 
