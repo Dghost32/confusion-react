@@ -1,9 +1,8 @@
 # Coursera course project
 Confusion, made by Carlos Jimenez
 
-# Getting Started with Create React App	# Coursera course project
+# Getting Started with Create React App	
 
-Confusion, made by Carlos Jimenez
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).	
 
 ## Available Scripts	
