@@ -7,9 +7,9 @@ let ContactUsPage = () => {
     <div className="container">
       <div className="row">
         <Breadcrumb className="col-12">
-          <Breadcrumb.Item>
-            <Link to="/">Home</Link>
-          </Breadcrumb.Item>
+          <Link className="breadcrumb-item" to="/">
+            Home
+          </Link>
           <Breadcrumb.Item active>Contact us</Breadcrumb.Item>
         </Breadcrumb>
         <div className="col-12">

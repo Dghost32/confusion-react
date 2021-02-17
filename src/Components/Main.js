@@ -30,7 +30,7 @@ function Main() {
           />
         </Route>
         <Route exact path="/aboutus">
-          <AboutUsPage />
+          <AboutUsPage leaders={LEADERS}/>
         </Route>
         <Route exact path="/menu">
           <MenuPage dishes={DISHES} />
