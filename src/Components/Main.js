@@ -10,10 +10,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   Redirect,
 } from "react-router-dom";
-import { Navbar, Nav } from "react-bootstrap";
 
 function Main() {
   const [selectedDish, setSelectedDish] = useState(undefined);
