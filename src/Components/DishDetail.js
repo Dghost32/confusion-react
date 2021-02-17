@@ -9,7 +9,7 @@ let DishDetail = ({ dish }) => {
   return (
     <div className="row justify-content-left" key={id}>
       <DishCard detailed key={id} dish={dish} />
-      <DishComments comments={comments} />
+      <DishComments comments={comments? comments : []} />
     </div>
   );
 };

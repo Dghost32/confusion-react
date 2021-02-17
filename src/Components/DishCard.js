@@ -4,7 +4,7 @@ import { Card } from "react-bootstrap";
 let DishCard = ({ dish, detailed, callback }) => {
   let { name, image, description } = dish;
   return (
-    <Card onClick={() => callback(dish)} className="col-12 col-md-5 m-1 pt-2">
+    <Card onClick={callback ? () => callback(dish):undefined} className="col-12 col-md-5 m-1 pt-2">
       <Card.Img variant="top" src={image} />
       <Card.Body className="mt-2 border-top">
         <Card.Title className="text-center">{name}</Card.Title>
