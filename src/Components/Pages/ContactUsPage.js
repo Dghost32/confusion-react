@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 
 let ContactUsPage = () => {
   const userDataObj = {
-    firstName: "",
-    lastName: "",
+    firstname: "",
+    lastname: "",
     telnum: "",
     email: "",
     agree: false,
@@ -14,18 +14,76 @@ let ContactUsPage = () => {
   };
   const [userData, setUserData] = useState(userDataObj);
 
+  const [errors, setErrors] = useState({
+    firstname: "",
+    lastname: "",
+    telnum: "",
+    email: "",
+  });
+
+  const onSumbit = (e) => {
+    e.preventDefault();
+    document.getElementById("contact-form").reset();
+  };
+
   const handleInputChange = (e) => {
     let value =
       e.target.type === "checkbox" ? e.target.checked : e.target.value;
     let name = e.target.name;
     setUserData({ ...userData, [name]: value });
+    validate(name);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("current state is", JSON.stringify(userData));
-    console.log("submit");
-    setUserData(userDataObj);
+  let validate = (token) => {
+    if (token === "firstname" || token === "lastname") {
+      if (userData[token].length <= 2) {
+        return setErrors({
+          ...errors,
+          [token]:
+            token === "firstname"
+              ? "First name should be >= than 3 characters"
+              : "Last name should be >= than 3 characters",
+        });
+      } else if (userData[token].length > 9) {
+        return setErrors({
+          ...errors,
+          [token]:
+            token === "firstname"
+              ? "First name should be <= than 10 characters"
+              : "Last name should be <= than 10 characters",
+        });
+      } else {
+        return setErrors({
+          ...errors,
+          [token]: "",
+        });
+      }
+    }
+    if (token === "telnum") {
+      const regEx = /^\d+$/;
+      if (!regEx.test(userData[token])) {
+        return setErrors({
+          ...errors,
+          [token]: "Tel. number should contain only numbers",
+        });
+      } else
+        return setErrors({
+          ...errors,
+          [token]: "",
+        });
+    }
+    if (token === "email") {
+      if (userData[token].split("").filter((x) => x === "@").length !== 1) {
+        return setErrors({
+          ...errors,
+          [token]: "Email should contain a @",
+        });
+      } else
+        return setErrors({
+          ...errors,
+          [token]: "",
+        });
+    }
   };
 
   return (
@@ -92,21 +150,30 @@ let ContactUsPage = () => {
         <h3 className="col-12">Send us your feedback</h3>
         <hr className="col-md-9" />
         <div className="col-12 col-md-9 ">
-          <Form onSubmit={handleSubmit} id="contact-form">
+          <Form id="contact-form">
             {/* first name */}
             <Form.Group className="row align-items-center">
               <Form.Label htmlFor="firstname" className="col-md-2">
                 First name
               </Form.Label>
               <Form.Control
-                className="col-md-10"
+                className="col-md-10 "
                 type="text"
                 id="firstname"
-                name="firstName"
+                name="firstname"
                 placeholder="First name"
+                isValid={errors.firstname === ""}
+                isInvalid={errors.firstname !== ""}
                 onChange={handleInputChange}
-                value={userData.firstName}
+                value={userData.firstname}
               />
+              <p
+                className={`offset-2 text-muted ${
+                  errors.firstname === "" ? "d-none" : "d-block"
+                }`}
+              >
+                {errors.firstname}
+              </p>
             </Form.Group>
             {/* last name */}
             <Form.Group className="row align-items-center">
@@ -114,14 +181,23 @@ let ContactUsPage = () => {
                 Last Name
               </Form.Label>
               <Form.Control
-                className="col-md-10"
+                className={`col-md-10 `}
+                isValid={errors.lastname === ""}
+                isInvalid={errors.lastname !== ""}
                 type="text"
                 id="lastname"
-                name="lastName"
+                name="lastname"
                 placeholder="Last name"
                 onChange={handleInputChange}
-                value={userData.lastName}
+                value={userData.lastname}
               />
+              <p
+                className={`offset-2 text-muted ${
+                  errors.lastname === "" ? "d-none" : "d-block"
+                }`}
+              >
+                {errors.lastname}
+              </p>
             </Form.Group>
             {/* contact tel */}
             <Form.Group className="row align-items-center">
@@ -134,9 +210,18 @@ let ContactUsPage = () => {
                 id="telnum"
                 name="telnum"
                 placeholder="Contact tel."
+                isValid={errors.telnum === ""}
+                isInvalid={errors.telnum !== ""}
                 onChange={handleInputChange}
                 value={userData.telnum}
               />
+              <p
+                className={`offset-2 text-muted ${
+                  errors.telnum === "" ? "d-none" : "d-block"
+                }`}
+              >
+                {errors.telnum}
+              </p>
             </Form.Group>
             {/* email */}
             <Form.Group className="row align-items-center">
@@ -149,9 +234,18 @@ let ContactUsPage = () => {
                 id="email"
                 name="email"
                 placeholder="Email"
+                isValid={errors.email === ""}
+                isInvalid={errors.email !== ""}
                 onChange={handleInputChange}
                 value={userData.email}
               />
+              <p
+                className={`offset-2 text-muted ${
+                  errors.email === "" ? "d-none" : "d-block"
+                }`}
+              >
+                {errors.email}
+              </p>
             </Form.Group>
             {/* checkbox and contact option */}
             <Form.Group className="row align-items-center justify-content-between">
@@ -195,6 +289,7 @@ let ContactUsPage = () => {
               <Button
                 className="col-md-auto offset-md-2 btn btn-primary"
                 type="sumbit"
+                onSubmit={onSumbit}
               >
                 Send feedback
               </Button>
