@@ -1,6 +1,7 @@
 import React from "react";
+import { Button } from "reactstrap";
 
-let DishComments = ({ comments }) => {
+let DishComments = ({ comments, toggle }) => {
   let showComments = comments.map((c) => {
     let { id, comment, author, date } = c;
     return (
@@ -24,6 +25,14 @@ let DishComments = ({ comments }) => {
     <div className="col-12 col-md-5 m-1">
       <h1 className="row">Comments</h1>
       {showComments}
+      <Button
+        onClick={toggle}
+        className="col-auto offset-1"
+        outline
+        color="secondary"
+      >
+        <i className="fas fa-pencil-alt"></i> Submit commit
+      </Button>
     </div>
   );
 };
