@@ -6,37 +6,44 @@ import HomePage from "./Pages/HomePage";
 import AboutUsPage from "./Pages/AboutUsPage";
 import ContactUsPage from "./Pages/ContactUsPage";
 import DishDetailPage from "./Pages/DishDetailPage";
-import { DISHES } from "../shared/dishes";
-import { PROMOTIONS } from "../shared/promotions";
-import { LEADERS } from "../shared/leaders";
-import { COMMENTS } from "../shared/comments";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
+  withRouter,
   Redirect,
 } from "react-router-dom";
+import { connect } from "react-redux";
 
-function Main() {
+const mapStateToProps = (state) => {
+  return {
+    dishes: state.dishes,
+    comments: state.comments,
+    promotions: state.promotions,
+    leaders: state.leaders,
+  };
+};
+
+function Main({ dishes, promotions, leaders, comments }) {
   return (
     <Router>
       <Header />
       <Switch>
         <Route exact path="/">
           <HomePage
-            dish={DISHES.filter((dish) => dish.featured)[0]}
-            promotion={PROMOTIONS.filter((promo) => promo.featured)[0]}
-            leader={LEADERS.filter((leader) => leader.featured)[0]}
+            dish={dishes.filter((dish) => dish.featured)[0]}
+            promotion={promotions.filter((promo) => promo.featured)[0]}
+            leader={leaders.filter((leader) => leader.featured)[0]}
           />
         </Route>
         <Route exact path="/aboutus">
-          <AboutUsPage leaders={LEADERS}/>
+          <AboutUsPage leaders={leaders} />
         </Route>
         <Route exact path="/menu">
-          <MenuPage dishes={DISHES} />
+          <MenuPage dishes={dishes} />
         </Route>
         <Route path="/menu/:dishId">
-          <DishDetailPage dishes={DISHES} comments={COMMENTS} />
+          <DishDetailPage dishes={dishes} comments={comments} />
         </Route>
         <Route exact path="/contactus">
           <ContactUsPage />
@@ -48,4 +55,4 @@ function Main() {
   );
 }
 
-export default Main;
+export default withRouter(connect(mapStateToProps)(Main));
