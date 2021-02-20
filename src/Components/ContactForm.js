@@ -1,6 +1,14 @@
+/* eslint-disable react/jsx-pascal-case */
 import React from "react";
 import { Button, Form } from "react-bootstrap";
 import { Control, LocalForm, Errors } from "react-redux-form";
+
+const required = (val) => val && val.length;
+const maxLength = (len) => (val) => !val || val.length <= len;
+const minLength = (len) => (val) => val && val.length >= len;
+const isNumber = (val) => !isNaN(Number(val));
+const validEmail = (val) =>
+  /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val);
 
 const ContactForm = () => {
   const handleSubmit = (values) => {
@@ -24,6 +32,21 @@ const ContactForm = () => {
               name="firstname"
               className="col-md-10 form-control"
               placeholder="First name"
+              validators={{
+                required,
+                minLength: minLength(3),
+                maxLength: maxLength(15),
+              }}
+            />
+            <Errors
+              className="text-danger offset-md-2"
+              model=".firstname"
+              show="touched"
+              messages={{
+                required: "Required",
+                minLength: "Must be greater than 2 characters",
+                maxLength: "Must be 15 characters or less",
+              }}
             />
           </div>
           {/* last name */}
@@ -37,6 +60,21 @@ const ContactForm = () => {
               name="lastname"
               className="col-md-10 form-control"
               placeholder="Last name"
+              validators={{
+                required,
+                minLength: minLength(3),
+                maxLength: maxLength(15),
+              }}
+            />
+            <Errors
+              className="text-danger offset-md-2"
+              model=".lastname"
+              show="touched"
+              messages={{
+                required: "Required",
+                minLength: "Must be greater than 2 characters",
+                maxLength: "Must be 15 characters or less",
+              }}
             />
           </div>
           {/* contact tel */}
@@ -50,6 +88,23 @@ const ContactForm = () => {
               name="telnum"
               className="col-md-10 form-control"
               placeholder="Contact tel."
+              validators={{
+                required,
+                minLength: minLength(3),
+                maxLength: maxLength(15),
+                isNumber,
+              }}
+            />
+            <Errors
+              className="text-danger offset-md-2"
+              model=".telnum"
+              show="touched"
+              messages={{
+                required: "Required",
+                minLength: "Must be greater than 2 numbers",
+                maxLength: "Must be 15 numbers or less",
+                isNumber: "Must be a number",
+              }}
             />
           </div>
           {/* email */}
@@ -63,12 +118,25 @@ const ContactForm = () => {
               type="email"
               name="email"
               placeholder="Email"
+              validators={{
+                required,
+                validEmail,
+              }}
+            />
+            <Errors
+              className="text-danger offset-md-2"
+              model=".email"
+              show="touched"
+              messages={{
+                required: "Required",
+                validEmail: "Invalid email address",
+              }}
             />
           </div>
           {/* checkbox and contact option */}
           <div className="row form-group align-items-center justify-content-between">
             <div className="form-check col-md-6 offset-md-2">
-              <Form.Label check>
+              <Form.Label>
                 <Control.checkbox
                   model=".agree"
                   name="agree"
