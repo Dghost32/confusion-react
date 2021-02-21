@@ -28,6 +28,8 @@ let DishDetailPage = ({ dishes, comments }) => {
     (comment) => comment.dishId === parseInt(dishId, 10)
   );
 
+  /* CommentForm component is inside SubmitCommentModal component */
+
   return (
     <>
       <SubmitCommentModal show={showModal} toggle={toggleModal} />
@@ -72,6 +74,20 @@ let DishDetailBody = ({ dish, comments, toggle }) => {
 };
 
 let SubmitCommentModal = ({ show, toggle }) => {
+  return (
+    <Modal isOpen={show} toggle={toggle}>
+      <ModalHeader toggle={toggle}>
+        <strong>Submit comment</strong>
+      </ModalHeader>
+      <ModalBody>
+        {/* HERE!!! */}
+        <CommentForm />
+      </ModalBody>
+    </Modal>
+  );
+};
+
+const CommentForm = () => {
   /* form validations */
   const required = (val) => val && val.length;
   const maxLength = (len) => (val) => !val || val.length <= len;
@@ -81,66 +97,60 @@ let SubmitCommentModal = ({ show, toggle }) => {
     let regex = /^[a-zA-Z ]{0,300}$/;
     return regex.test(name);
   };
-
   /* form submit */
   const handleSubmit = (values) => {
     console.log("values", JSON.stringify(values));
   };
 
   return (
-    <Modal isOpen={show} toggle={toggle}>
-      <ModalHeader toggle={toggle}>
-        <strong>Submit comment</strong>
-      </ModalHeader>
-      <ModalBody>
-        <LocalForm onSubmit={(values) => handleSubmit(values)}>
-          <FormGroup>
-            <Label>Rating</Label>
-            <Control.select model=".rating" className="form-control">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-            </Control.select>
-          </FormGroup>
-          <FormGroup>
-            <Label>Your name</Label>
-            <Control.text
-              model=".username"
-              placeholder="Your name"
-              className="form-control"
-              validators={{
-                required,
-                isName,
-                minLength: minLength(2),
-                maxLength: maxLength(15),
-              }}
-            />
-            <Errors
-              className="text-danger"
-              model=".username"
-              show="touched"
-              messages={{
-                required: "Required ",
-                isName: "Name can only contain alphabetic characters ",
-                minLength: "Must be greater than 2 characters ",
-                maxLength: "Must be 15 characters or less ",
-              }}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label>Comment</Label>
-            <Control.textarea
-              model=".comment"
-              rows={8}
-              className="form-control"
-            />
-          </FormGroup>
-          <Button color="primary">Submit</Button>
-        </LocalForm>
-      </ModalBody>
-    </Modal>
+    <>
+      <LocalForm onSubmit={(values) => handleSubmit(values)}>
+        <FormGroup>
+          <Label>Rating</Label>
+          <Control.select model=".rating" className="form-control">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </Control.select>
+        </FormGroup>
+        <FormGroup>
+          <Label>Your name</Label>
+          <Control.text
+            model=".username"
+            placeholder="Your name"
+            className="form-control"
+            validators={{
+              required,
+              isName,
+              minLength: minLength(2),
+              maxLength: maxLength(15),
+            }}
+          />
+          <Errors
+            className="text-danger"
+            model=".username"
+            show="touched"
+            messages={{
+              required: "Required ",
+              isName: "Name can only contain alphabetic characters ",
+              minLength: "Must be greater than 2 characters ",
+              maxLength: "Must be 15 characters or less ",
+            }}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Comment</Label>
+          <Control.textarea
+            model=".comment"
+            rows={8}
+            className="form-control"
+          />
+        </FormGroup>
+        <Button color="primary">Submit</Button>
+      </LocalForm>
+    </>
   );
 };
 
