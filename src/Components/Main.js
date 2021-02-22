@@ -14,6 +14,7 @@ import {
   Redirect,
 } from "react-router-dom";
 import { connect } from "react-redux";
+import { addComment } from "../redux/ActionCreators";
 
 const mapStateToProps = (state) => {
   return {
@@ -24,7 +25,12 @@ const mapStateToProps = (state) => {
   };
 };
 
-function Main({ dishes, promotions, leaders, comments }) {
+const mapDispatchToProps = (dispatch) => ({
+  addComment: (dishId, rating, author, comment) =>
+    dispatch(addComment(dishId, rating, author, comment)),
+});
+
+function Main({ dishes, comments, promotions, leaders, addComment }) {
   return (
     <Router>
       <Header />
@@ -43,7 +49,11 @@ function Main({ dishes, promotions, leaders, comments }) {
           <MenuPage dishes={dishes} />
         </Route>
         <Route path="/menu/:dishId">
-          <DishDetailPage dishes={dishes} comments={comments} />
+          <DishDetailPage
+            dishes={dishes}
+            comments={comments}
+            addComment={addComment}
+          />
         </Route>
         <Route exact path="/contactus">
           <ContactUsPage />
@@ -55,4 +65,4 @@ function Main({ dishes, promotions, leaders, comments }) {
   );
 }
 
-export default withRouter(connect(mapStateToProps)(Main));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));

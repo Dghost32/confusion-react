@@ -15,11 +15,10 @@ import {
 } from "reactstrap";
 import { Control, LocalForm, Errors } from "react-redux-form";
 
-let DishDetailPage = ({ dishes, comments }) => {
+let DishDetailPage = ({ dishes, comments, addComment }) => {
   /* Modal data */
   const [showModal, setShowModal] = useState(false);
   const toggleModal = () => setShowModal(!showModal);
-
   /* getting dish and comments */
   let { dishId } = useParams();
   if (!dishes) return <div></div>;
@@ -27,17 +26,21 @@ let DishDetailPage = ({ dishes, comments }) => {
   let commentsList = comments.filter(
     (comment) => comment.dishId === parseInt(dishId, 10)
   );
-
   /* CommentForm component is inside SubmitCommentModal component */
-
   return (
     <>
-      <SubmitCommentModal show={showModal} toggle={toggleModal} />
+      <SubmitCommentModal
+        show={showModal}
+        toggle={toggleModal}
+        dishId={dish.id}
+        addComment={addComment}
+      />
       <DishDetailBreadcrumb name={dish.name} />
       <DishDetailBody
         dish={dish}
         comments={commentsList}
         toggle={toggleModal}
+        addComment={addComment}
       />
     </>
   );
@@ -57,7 +60,7 @@ let DishDetailBreadcrumb = ({ name }) => (
   </div>
 );
 
-let DishDetailBody = ({ dish, comments, toggle }) => {
+let DishDetailBody = ({ dish, comments, toggle, addComment }) => {
   let { id, name } = dish;
   return (
     <div className="container">
@@ -67,13 +70,18 @@ let DishDetailBody = ({ dish, comments, toggle }) => {
       </div>
       <div className="row justify-content-left" key={id}>
         <DishCard detailed key={id} dish={dish} />
-        <DishComments comments={comments} toggle={toggle} />
+        <DishComments
+          comments={comments}
+          toggle={toggle}
+          addComment={addComment}
+          dishId={id}
+        />
       </div>
     </div>
   );
 };
 
-let SubmitCommentModal = ({ show, toggle }) => {
+let SubmitCommentModal = ({ show, toggle, dishId, addComment }) => {
   return (
     <Modal isOpen={show} toggle={toggle}>
       <ModalHeader toggle={toggle}>
@@ -81,13 +89,13 @@ let SubmitCommentModal = ({ show, toggle }) => {
       </ModalHeader>
       <ModalBody>
         {/* HERE!!! */}
-        <CommentForm />
+        <CommentForm dishId={dishId} addComment={addComment} toggle={toggle} />
       </ModalBody>
     </Modal>
   );
 };
 
-const CommentForm = () => {
+const CommentForm = ({ dishId, addComment, toggle }) => {
   /* form validations */
   const required = (val) => val && val.length;
   const maxLength = (len) => (val) => !val || val.length <= len;
@@ -99,7 +107,9 @@ const CommentForm = () => {
   };
   /* form submit */
   const handleSubmit = (values) => {
-    console.log("values", JSON.stringify(values));
+    toggle();
+    let { rating, author, comment } = values;
+    addComment(dishId, rating, author, comment);
   };
 
   return (
@@ -118,7 +128,7 @@ const CommentForm = () => {
         <FormGroup>
           <Label>Your name</Label>
           <Control.text
-            model=".username"
+            model=".author"
             placeholder="Your name"
             className="form-control"
             validators={{
@@ -130,7 +140,7 @@ const CommentForm = () => {
           />
           <Errors
             className="text-danger"
-            model=".username"
+            model=".author"
             show="touched"
             messages={{
               required: "Required ",
