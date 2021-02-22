@@ -1,4 +1,5 @@
 import { createStore, combineReducers } from "redux";
+/* Reducers import */
 import { Dishes } from "./dishes";
 import { Comments } from "./comments";
 import { Promotions } from "./promotions";

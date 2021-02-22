@@ -1,7 +1,7 @@
-import * as ActionTypes from "./ActionTypes";
+import { ADD_COMMENT } from "./ActionTypes";
 
 export const addComment = (dishId, rating, author, comment) => ({
-  type: ActionTypes.ADD_COMMENT,
+  type: ADD_COMMENT,
   payload: {
     dishId,
     rating,
