@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-pascal-case */
 import React from "react";
 import { Button, Form } from "react-bootstrap";
-import { Control, LocalForm, Errors } from "react-redux-form";
+import { Control, Form as F, Errors, actions } from "react-redux-form";
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !val || val.length <= len;
@@ -10,9 +10,10 @@ const isNumber = (val) => !isNaN(Number(val));
 const validEmail = (val) =>
   /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val);
 
-const ContactForm = () => {
+const ContactForm = ({ resetFeedbackForm }) => {
   const handleSubmit = (values) => {
     console.log("values", JSON.stringify(values));
+    resetFeedbackForm();
   };
 
   return (
@@ -20,7 +21,7 @@ const ContactForm = () => {
       <h3 className="col-12">Send us your feedback</h3>
       <hr className="col-md-9" />
       <div className="col-12 col-md-9 ">
-        <LocalForm onSubmit={(values) => handleSubmit(values)}>
+        <F model="feedback" onSubmit={(values) => handleSubmit(values)}>
           {/* first name */}
           <div className="row form-group align-items-center">
             <Form.Label htmlFor="firstname" className="col-md-2">
@@ -176,7 +177,7 @@ const ContactForm = () => {
               Send feedback
             </Button>
           </div>
-        </LocalForm>
+        </F>
       </div>
     </div>
   );

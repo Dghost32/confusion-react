@@ -1,12 +1,31 @@
-import React, { useEffect } from "react";
+import React from "react";
 import DishCard from "./DishCard";
+import { LoadingComponent } from "./LoadingComponent";
 
 let Menu = ({ dishes }) => {
-  useEffect(() => {
-    console.log("menu component did mount");
-  }, []);
+  if (dishes.isLoading)
+    return (
+      <div className="container">
+        <div className="row">
+          <LoadingComponent />
+        </div>
+      </div>
+    );
 
-  const menu = dishes.map((dish) => <DishCard key={dish.id} dish={dish} />);
+  if (dishes.err)
+    return (
+      <div className="container">
+        <div className="row">
+          <h4>{dishes.err}</h4>
+        </div>
+      </div>
+    );
+
+  console.log('dishes', dishes)
+
+  const menu = dishes.dishes.map((dish) => (
+    <DishCard key={dish.id} dish={dish} />
+  ));
 
   return <div className="row justify-content-left">{menu}</div>;
 };

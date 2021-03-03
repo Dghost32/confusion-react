@@ -1,7 +1,11 @@
 import React from "react";
 import { Card } from "react-bootstrap";
+import { LoadingComponent } from "../LoadingComponent";
 
-const DetailsCard = ({ item }) => {
+const DetailsCard = ({ item, isLoading, err }) => {
+  if (isLoading) return <LoadingComponent />;
+  if (err) return <h4>{err}</h4>;
+  
   return (
     <Card className="col-12 col-md m-1" style={{ width: "18rem" }}>
       <Card.Img
@@ -21,16 +25,17 @@ const DetailsCard = ({ item }) => {
   );
 };
 
-let Home = ({ dish, promotion, leader }) => {
+let HomePage = ({ dish, promotion, leader, isLoading, err }) => {
+  console.log('dish', dish)
   return (
     <div className="container">
       <div className="row align-align-items-start">
-        <DetailsCard item={dish} />
-        <DetailsCard item={promotion} />
-        <DetailsCard item={leader} />
+        <DetailsCard item={dish} isLoading={isLoading} err={err} />
+        <DetailsCard item={promotion} isLoading={isLoading} err={err} />
+        <DetailsCard item={leader} isLoading={isLoading} err={err} />
       </div>
     </div>
   );
 };
 
-export default Home;
+export default HomePage;

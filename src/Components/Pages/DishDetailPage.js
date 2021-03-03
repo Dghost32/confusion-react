@@ -14,19 +14,39 @@ import {
   Label,
 } from "reactstrap";
 import { Control, LocalForm, Errors } from "react-redux-form";
+import { LoadingComponent } from "../LoadingComponent";
 
-let DishDetailPage = ({ dishes, comments, addComment }) => {
+let DishDetailPage = ({ dishes, comments, addComment, isLoading, err }) => {
   /* Modal data */
   const [showModal, setShowModal] = useState(false);
   const toggleModal = () => setShowModal(!showModal);
   /* getting dish and comments */
   let { dishId } = useParams();
+
+  if (isLoading)
+    return (
+      <div className="container">
+        <div className="row">
+          <LoadingComponent />
+        </div>
+      </div>
+    );
+
+  if (err)
+    return (
+      <div className="container">
+        <div className="row">
+          <h4>{err}</h4>
+        </div>
+      </div>
+    );
+
   if (!dishes) return <div></div>;
+
   let dish = dishes.filter((dish) => dish.id === parseInt(dishId))[0];
   let commentsList = comments.filter(
     (comment) => comment.dishId === parseInt(dishId, 10)
   );
-  /* CommentForm component is inside SubmitCommentModal component */
   return (
     <>
       <SubmitCommentModal

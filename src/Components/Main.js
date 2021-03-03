@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import MenuPage from "./Pages/MenuPage";
@@ -14,35 +14,59 @@ import {
   Redirect,
 } from "react-router-dom";
 import { connect } from "react-redux";
-import { addComment } from "../redux/ActionCreators";
+import { addComment, fetchDishes } from "../redux/ActionCreators";
+import { actions } from "react-redux-form";
 
-const mapStateToProps = (state) => {
-  return {
-    dishes: state.dishes,
-    comments: state.comments,
-    promotions: state.promotions,
-    leaders: state.leaders,
-  };
-};
+const mapStateToProps = (state) => ({
+  dishes: state.dishes,
+  comments: state.comments,
+  promotions: state.promotions,
+  leaders: state.leaders,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   addComment: (dishId, rating, author, comment) =>
     dispatch(addComment(dishId, rating, author, comment)),
+  fetchDishes: () => dispatch(fetchDishes()),
+  resetFeedbackForm: () => {
+    dispatch(actions.reset("feedback"));
+  },
 });
 
-function Main({ dishes, comments, promotions, leaders, addComment }) {
+function Main({
+  dishes,
+  comments,
+  promotions,
+  leaders,
+  addComment,
+  fetchDishes,
+  resetFeedbackForm,
+}) {
+  useEffect(() => {
+    console.log("fetiching dishes");
+    fetchDishes();
+  });
+
+  useEffect(() => {
+    console.log("in dishes update");
+    console.log("dishes", dishes);
+  }, [dishes]);
+
   return (
     <Router>
       <Header />
       <Switch>
         <Route exact path="/">
           <HomePage
-            dish={dishes.filter((dish) => dish.featured)[0]}
+            isLoading={dishes.isLoading}
+            err={dishes.err}
+            dish={dishes.dishes.filter((dish) => dish.featured)[0]}
             promotion={promotions.filter((promo) => promo.featured)[0]}
             leader={leaders.filter((leader) => leader.featured)[0]}
           />
         </Route>
         <Route exact path="/aboutus">
+          {console.log(dishes)}
           <AboutUsPage leaders={leaders} />
         </Route>
         <Route exact path="/menu">
@@ -50,13 +74,15 @@ function Main({ dishes, comments, promotions, leaders, addComment }) {
         </Route>
         <Route path="/menu/:dishId">
           <DishDetailPage
-            dishes={dishes}
+            isLoading={dishes.isLoading}
+            err={dishes.err}
+            dishes={dishes.dishes}
             comments={comments}
             addComment={addComment}
           />
         </Route>
         <Route exact path="/contactus">
-          <ContactUsPage />
+          <ContactUsPage resetFeedbackForm={resetFeedbackForm} />
         </Route>
         <Redirect to="/" />
       </Switch>
