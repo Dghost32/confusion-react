@@ -15,7 +15,7 @@ import {
 } from "react-router-dom";
 import { connect } from "react-redux";
 import {
-  addComment,
+  postComment,
   fetchDishes,
   fetchPromos,
   fetchComments,
@@ -30,8 +30,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  addComment: (dishId, rating, author, comment) =>
-    dispatch(addComment(dishId, rating, author, comment)),
+  postComment: (dishId, rating, author, comment) =>
+    dispatch(postComment(dishId, rating, author, comment)),
   resetFeedbackForm: () => {
     dispatch(actions.reset("feedback"));
   },
@@ -45,7 +45,7 @@ function Main({
   comments,
   promotions,
   leaders,
-  addComment,
+  postComment,
   fetchDishes,
   fetchComments,
   fetchPromos,
@@ -76,7 +76,6 @@ function Main({
           />
         </Route>
         <Route exact path="/aboutus">
-          {console.log(dishes)}
           <AboutUsPage leaders={leaders} />
         </Route>
         <Route exact path="/menu">
@@ -88,7 +87,7 @@ function Main({
             err={dishes.err}
             dishes={dishes.dishes}
             comments={comments.comments}
-            addComment={addComment}
+            postComment={postComment}
           />
         </Route>
         <Route exact path="/contactus">

@@ -11,15 +11,50 @@ import {
 } from "./ActionTypes";
 import { baseUrl } from "../shared/baseUrl";
 
-export const addComment = (dishId, rating, author, comment) => ({
+export const addComment = (comment) => ({
   type: ADD_COMMENT,
-  payload: {
+  payload: comment,
+});
+
+export const postComment = (dishId, rating, author, comment) => (dispatch) => {
+  const newComment = {
     dishId,
     rating,
     author,
     comment,
-  },
-});
+    date: new Date().toISOString(),
+  };
+
+  return fetch(baseUrl + "comments", {
+    method: "POST",
+    body: JSON.stringify(newComment),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "same-origin",
+  })
+    .then(
+      (res) => {
+        if (res.ok) {
+          return res;
+        }
+        throw new Error(`Error ${res.status}: ${res.statusText}`);
+      },
+      (error) => {
+        throw new Error(error.message);
+      }
+    )
+    .then((res) => res.json())
+    .then((res) => {
+      dispatch(addComment(res));
+    })
+    .catch((err) => {
+      console.error("Post comments", err);
+      alert(
+        "Your comment could not be posted\ndue to an internal server error"
+      );
+    });
+};
 
 /* DISHES */
 export const fetchDishes = () => (dispatch) => {

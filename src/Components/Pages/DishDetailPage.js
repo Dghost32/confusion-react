@@ -16,7 +16,7 @@ import {
 import { Control, LocalForm, Errors } from "react-redux-form";
 import { LoadingComponent } from "../LoadingComponent";
 
-let DishDetailPage = ({ dishes, comments, addComment, isLoading, err }) => {
+let DishDetailPage = ({ dishes, comments, postComment, isLoading, err }) => {
   /* Modal data */
   const [showModal, setShowModal] = useState(false);
   const toggleModal = () => setShowModal(!showModal);
@@ -53,14 +53,13 @@ let DishDetailPage = ({ dishes, comments, addComment, isLoading, err }) => {
         show={showModal}
         toggle={toggleModal}
         dishId={dish.id}
-        addComment={addComment}
+        postComment={postComment}
       />
       <DishDetailBreadcrumb name={dish.name} />
       <DishDetailBody
         dish={dish}
         comments={commentsList}
         toggle={toggleModal}
-        addComment={addComment}
       />
     </>
   );
@@ -80,7 +79,7 @@ let DishDetailBreadcrumb = ({ name }) => (
   </div>
 );
 
-let DishDetailBody = ({ dish, comments, toggle, addComment }) => {
+let DishDetailBody = ({ dish, comments, toggle }) => {
   let { id, name } = dish;
   return (
     <div className="container">
@@ -90,32 +89,30 @@ let DishDetailBody = ({ dish, comments, toggle, addComment }) => {
       </div>
       <div className="row justify-content-left" key={id}>
         <DishCard detailed key={id} dish={dish} />
-        <DishComments
-          comments={comments}
-          toggle={toggle}
-          addComment={addComment}
-          dishId={id}
-        />
+        <DishComments comments={comments} toggle={toggle} />
       </div>
     </div>
   );
 };
 
-let SubmitCommentModal = ({ show, toggle, dishId, addComment }) => {
+let SubmitCommentModal = ({ show, toggle, dishId, postComment }) => {
   return (
     <Modal isOpen={show} toggle={toggle}>
       <ModalHeader toggle={toggle}>
         <strong>Submit comment</strong>
       </ModalHeader>
       <ModalBody>
-        {/* HERE!!! */}
-        <CommentForm dishId={dishId} addComment={addComment} toggle={toggle} />
+        <CommentForm
+          dishId={dishId}
+          postComment={postComment}
+          toggle={toggle}
+        />
       </ModalBody>
     </Modal>
   );
 };
 
-const CommentForm = ({ dishId, addComment, toggle }) => {
+const CommentForm = ({ dishId, postComment, toggle }) => {
   /* form validations */
   const required = (val) => val && val.length;
   const maxLength = (len) => (val) => !val || val.length <= len;
@@ -127,9 +124,9 @@ const CommentForm = ({ dishId, addComment, toggle }) => {
   };
   /* form submit */
   const handleSubmit = (values) => {
-    toggle();
     let { rating, author, comment } = values;
-    addComment(dishId, rating, author, comment);
+    postComment(dishId, rating, author, comment);
+    toggle();
   };
 
   return (
