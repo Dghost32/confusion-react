@@ -26,8 +26,20 @@ export const fetchDishes = () => (dispatch) => {
   dispatch(dishesLoading());
 
   return fetch(baseUrl + "dishes")
+    .then(
+      (res) => {
+        if (res.ok) {
+          return res;
+        }
+        throw new Error(`Error ${res.status}: ${res.statusText}`);
+      },
+      (error) => {
+        throw new Error(error.message);
+      }
+    )
     .then((res) => res.json())
-    .then((dishes) => dispatch(addDishes(dishes)));
+    .then((dishes) => dispatch(addDishes(dishes)))
+    .catch((err) => dispatch(dishesFailed(err.message)));
 };
 export const dishesLoading = () => ({
   type: DISHES_LOADING,
@@ -45,8 +57,20 @@ export const addDishes = (dishes) => {
 /* COMMENTS */
 export const fetchComments = () => (dispatch) =>
   fetch(baseUrl + "comments")
+    .then(
+      (res) => {
+        if (res.ok) {
+          return res;
+        }
+        throw new Error(`Error ${res.status}: ${res.statusText}`);
+      },
+      (error) => {
+        throw new Error(error.message);
+      }
+    )
     .then((res) => res.json())
-    .then((comments) => dispatch(addComments(comments)));
+    .then((comments) => dispatch(addComments(comments)))
+    .catch((err) => dispatch(commentsFailed(err.message)));
 export const commentsFailed = (err) => ({
   type: COMMENTS_FAILED,
   payload: err,
@@ -60,8 +84,20 @@ export const fetchPromos = () => (dispatch) => {
   dispatch(promosLoading(true));
 
   return fetch(baseUrl + "promotions")
+    .then(
+      (res) => {
+        if (res.ok) {
+          return res;
+        }
+        throw new Error(`Error ${res.status}: ${res.statusText}`);
+      },
+      (error) => {
+        throw new Error(error.message);
+      }
+    )
     .then((res) => res.json())
-    .then((promos) => dispatch(addPromos(promos)));
+    .then((promos) => dispatch(addPromos(promos)))
+    .catch((err) => dispatch(promosFailed(err.message)));
 };
 export const promosLoading = () => ({
   type: PROMOS_LOADING,
