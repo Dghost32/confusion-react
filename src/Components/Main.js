@@ -14,7 +14,12 @@ import {
   Redirect,
 } from "react-router-dom";
 import { connect } from "react-redux";
-import { addComment, fetchDishes } from "../redux/ActionCreators";
+import {
+  addComment,
+  fetchDishes,
+  fetchPromos,
+  fetchComments,
+} from "../redux/ActionCreators";
 import { actions } from "react-redux-form";
 
 const mapStateToProps = (state) => ({
@@ -27,10 +32,12 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   addComment: (dishId, rating, author, comment) =>
     dispatch(addComment(dishId, rating, author, comment)),
-  fetchDishes: () => dispatch(fetchDishes()),
   resetFeedbackForm: () => {
     dispatch(actions.reset("feedback"));
   },
+  fetchDishes: () => dispatch(fetchDishes()),
+  fetchPromos: () => dispatch(fetchPromos()),
+  fetchComments: () => dispatch(fetchComments()),
 });
 
 function Main({
@@ -40,28 +47,31 @@ function Main({
   leaders,
   addComment,
   fetchDishes,
+  fetchComments,
+  fetchPromos,
   resetFeedbackForm,
 }) {
   useEffect(() => {
-    console.log("fetiching dishes");
     fetchDishes();
-  });
-
-  useEffect(() => {
-    console.log("in dishes update");
-    console.log("dishes", dishes);
-  }, [dishes]);
-
+    fetchPromos();
+    fetchComments();
+  }, [fetchDishes, fetchPromos, fetchComments]);
   return (
     <Router>
       <Header />
       <Switch>
         <Route exact path="/">
           <HomePage
-            isLoading={dishes.isLoading}
-            err={dishes.err}
+            dishesLoading={dishes.isLoading}
+            dishesErr={dishes.err}
+            promosLoading={promotions.isLoading}
+            promosErr={promotions.err}
+            commentsLoading={comments.isLoading}
+            commentsErr={comments.err}
             dish={dishes.dishes.filter((dish) => dish.featured)[0]}
-            promotion={promotions.filter((promo) => promo.featured)[0]}
+            promotion={
+              promotions.promotions.filter((promo) => promo.featured)[0]
+            }
             leader={leaders.filter((leader) => leader.featured)[0]}
           />
         </Route>
@@ -77,7 +87,7 @@ function Main({
             isLoading={dishes.isLoading}
             err={dishes.err}
             dishes={dishes.dishes}
-            comments={comments}
+            comments={comments.comments}
             addComment={addComment}
           />
         </Route>

@@ -1,14 +1,22 @@
-import { COMMENTS } from "../shared/comments";
-import { ADD_COMMENT } from "./ActionTypes";
+import { ADD_COMMENT, ADD_COMMENTS, COMMENTS_FAILED } from "./ActionTypes";
 
-export const Comments = (state = COMMENTS, action) => {
+const InitialState = {
+  isLoading: true,
+  err: undefined,
+  comments: [],
+};
+
+export const Comments = (state = InitialState, action) => {
   switch (action.type) {
+    case ADD_COMMENTS:
+      return { ...InitialState, isLoading: false, comments: action.payload };
+    case COMMENTS_FAILED:
+      return { ...InitialState, isLoading: false, err: action.payload };
     case ADD_COMMENT:
       var comment = action.payload;
-      comment.id = state.length;
+      comment.id = state.comments.length;
       comment.date = new Date().toISOString();
-      console.log("comment :>> ", comment);
-      return state.concat(comment);
+      return { ...state, comments: state.comments.concat(comment) };
     default:
       return state;
   }

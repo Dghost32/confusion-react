@@ -1,17 +1,18 @@
 import React from "react";
 import { Card } from "react-bootstrap";
 import { LoadingComponent } from "../LoadingComponent";
+import { baseUrl } from "../../shared/baseUrl";
 
 const DetailsCard = ({ item, isLoading, err }) => {
   if (isLoading) return <LoadingComponent />;
   if (err) return <h4>{err}</h4>;
-  
+
   return (
     <Card className="col-12 col-md m-1" style={{ width: "18rem" }}>
       <Card.Img
         variant="top"
         className="mt-1"
-        src={item.image}
+        src={baseUrl + item.image}
         alt={item.name}
       />
       <Card.Body>
@@ -25,14 +26,31 @@ const DetailsCard = ({ item, isLoading, err }) => {
   );
 };
 
-let HomePage = ({ dish, promotion, leader, isLoading, err }) => {
-  console.log('dish', dish)
+let HomePage = ({
+  dish,
+  promotion,
+  leader,
+  dishesLoading,
+  dishesErr,
+  promosLoading,
+  promosErr,
+  commentsLoading,
+  commentsErr,
+}) => {
   return (
     <div className="container">
       <div className="row align-align-items-start">
-        <DetailsCard item={dish} isLoading={isLoading} err={err} />
-        <DetailsCard item={promotion} isLoading={isLoading} err={err} />
-        <DetailsCard item={leader} isLoading={isLoading} err={err} />
+        <DetailsCard item={dish} isLoading={dishesLoading} err={dishesErr} />
+        <DetailsCard
+          item={promotion}
+          isLoading={promosLoading}
+          err={promosErr}
+        />
+        <DetailsCard
+          item={leader}
+          isLoading={commentsLoading}
+          err={commentsErr}
+        />
       </div>
     </div>
   );

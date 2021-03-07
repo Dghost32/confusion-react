@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Navbar, Nav, Jumbotron, Modal, Button, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { baseUrl } from '../shared/baseUrl';
 
 let Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   let username;
@@ -31,7 +31,7 @@ let Header = () => {
           <Link to="/">
             <Navbar.Brand>
               <img
-                src="assets/images/logo.png"
+                src={baseUrl+"images/logo.png"}
                 alt="logo"
                 height="30"
                 width="41  "

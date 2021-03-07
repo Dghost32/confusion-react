@@ -21,8 +21,6 @@ let Menu = ({ dishes }) => {
       </div>
     );
 
-  console.log('dishes', dishes)
-
   const menu = dishes.dishes.map((dish) => (
     <DishCard key={dish.id} dish={dish} />
   ));
