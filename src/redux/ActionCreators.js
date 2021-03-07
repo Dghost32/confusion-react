@@ -8,6 +8,9 @@ import {
   ADD_DISHES,
   PROMOS_FAILED,
   ADD_PROMOS,
+  ADD_LEADERS,
+  LEADERS_LOADING,
+  LEADERS_FAILED,
 } from "./ActionTypes";
 import { baseUrl } from "../shared/baseUrl";
 
@@ -116,7 +119,7 @@ export const addComments = (comments) => ({
 });
 /* PROMOS */
 export const fetchPromos = () => (dispatch) => {
-  dispatch(promosLoading(true));
+  dispatch(promosLoading());
 
   return fetch(baseUrl + "promotions")
     .then(
@@ -145,3 +148,58 @@ export const addPromos = (promos) => ({
   type: ADD_PROMOS,
   payload: promos,
 });
+/* LEADERS */
+export const fetchLeaders = () => (dispatch) => {
+  dispatch(leadersLoading);
+
+  return fetch(baseUrl + "leaders")
+    .then(
+      (res) => {
+        if (res.ok) return res;
+        throw new Error(`Error ${res.status}: ${res.statusText}`);
+      },
+      (error) => {
+        throw new Error(error.message);
+      }
+    )
+    .then((res) => res.json())
+    .then((res) => dispatch(addLeaders(res)))
+    .catch((err) => dispatch(leadersFailed(err.message)));
+};
+
+export const addLeaders = (leaders) => ({
+  type: ADD_LEADERS,
+  payload: leaders,
+});
+
+export const leadersLoading = () => ({
+  type: LEADERS_LOADING,
+});
+
+export const leadersFailed = (err) => ({
+  type: LEADERS_FAILED,
+  payload: err,
+});
+
+/* FEEDBACK */
+export const postFeedback = (feedback) => {
+  return fetch(baseUrl + "feedback", {
+    method: "POST",
+    body: JSON.stringify(feedback),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "same-origin",
+  })
+    .then(
+      (res) => {
+        if (res.ok) return res;
+        throw new Error(`Error ${res.status}: ${res.statusText}`);
+      },
+      (error) => {
+        throw new Error(error.message);
+      }
+    )
+    .then((res) => console.log("res.body", res.body))
+    .catch((err) => console.log(err.message));
+};

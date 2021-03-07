@@ -15,12 +15,15 @@ import {
 } from "react-router-dom";
 import { connect } from "react-redux";
 import {
+  postFeedback,
   postComment,
   fetchDishes,
   fetchPromos,
   fetchComments,
+  fetchLeaders,
 } from "../redux/ActionCreators";
 import { actions } from "react-redux-form";
+import { baseUrl } from "../shared/baseUrl";
 
 const mapStateToProps = (state) => ({
   dishes: state.dishes,
@@ -30,11 +33,13 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  postFeedback: (feedback) => postFeedback(feedback),
   postComment: (dishId, rating, author, comment) =>
     dispatch(postComment(dishId, rating, author, comment)),
   resetFeedbackForm: () => {
     dispatch(actions.reset("feedback"));
   },
+  fetchLeaders: () => dispatch(fetchLeaders()),
   fetchDishes: () => dispatch(fetchDishes()),
   fetchPromos: () => dispatch(fetchPromos()),
   fetchComments: () => dispatch(fetchComments()),
@@ -46,16 +51,19 @@ function Main({
   promotions,
   leaders,
   postComment,
+  postFeedback,
   fetchDishes,
   fetchComments,
   fetchPromos,
+  fetchLeaders,
   resetFeedbackForm,
 }) {
   useEffect(() => {
     fetchDishes();
     fetchPromos();
     fetchComments();
-  }, [fetchDishes, fetchPromos, fetchComments]);
+    fetchLeaders();
+  }, [fetchDishes, fetchPromos, fetchComments, fetchLeaders]);
   return (
     <Router>
       <Header />
@@ -66,17 +74,21 @@ function Main({
             dishesErr={dishes.err}
             promosLoading={promotions.isLoading}
             promosErr={promotions.err}
-            commentsLoading={comments.isLoading}
-            commentsErr={comments.err}
+            leadersLoading={leaders.isLoading}
+            leadersErr={leaders.err}
             dish={dishes.dishes.filter((dish) => dish.featured)[0]}
             promotion={
               promotions.promotions.filter((promo) => promo.featured)[0]
             }
-            leader={leaders.filter((leader) => leader.featured)[0]}
+            leader={leaders.leaders.filter((leader) => leader.featured)[0]}
           />
         </Route>
         <Route exact path="/aboutus">
-          <AboutUsPage leaders={leaders} />
+          <AboutUsPage
+            leadersLoading={leaders.isLoading}
+            leadersErr={leaders.err}
+            leaders={leaders.leaders}
+          />
         </Route>
         <Route exact path="/menu">
           <MenuPage dishes={dishes} />
@@ -91,7 +103,10 @@ function Main({
           />
         </Route>
         <Route exact path="/contactus">
-          <ContactUsPage resetFeedbackForm={resetFeedbackForm} />
+          <ContactUsPage
+            postFeedback={postFeedback}
+            resetFeedbackForm={resetFeedbackForm}
+          />
         </Route>
         <Redirect to="/" />
       </Switch>

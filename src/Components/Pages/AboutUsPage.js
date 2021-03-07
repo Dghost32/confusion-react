@@ -1,11 +1,21 @@
 import React from "react";
 import { Breadcrumb, Card, Media } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { baseUrl } from "../../shared/baseUrl";
+import { LoadingComponent } from "../LoadingComponent";
+import { Stagger, Fade } from "react-animation-components";
 
-let AboutUsPage = ({ leaders }) => {
-  const leadersList = leaders.map((leader) => (
-    <LeaderCard key={leader.id} leader={leader} />
-  ));
+let AboutUsPage = ({ leaders, leadersLoading, leadersErr }) => {
+  const leadersList = () => {
+    if (leadersLoading) return <LoadingComponent />;
+    if (leadersErr) return <h1>{leadersErr}</h1>;
+    if (!leadersLoading)
+      return leaders.map((leader) => (
+        <li style={{ listStyle: "none" }}>
+          <LeaderCard key={leader.id} leader={leader} />
+        </li>
+      ));
+  };
 
   return (
     <div className="container">
@@ -82,17 +92,21 @@ let AboutUsPage = ({ leaders }) => {
         <div className="col-12">
           <h2>Corporate Leadership</h2>
         </div>
-        {leadersList}
+        <ul>
+          <Stagger in>
+            <Fade in>{leadersList()}</Fade>
+          </Stagger>
+        </ul>
       </div>
     </div>
   );
 };
 
 let LeaderCard = ({ leader }) => {
-  const { image, name, designation, description } = leader;
+  const { name, designation, description } = leader;
   return (
     <Media className="col-12 mt-2">
-      <img className="mr-3" src={image} alt={name} />
+      <img className="mr-3" src={baseUrl + leader.image} alt={name} />
       <Media.Body>
         <div className="row">
           <h5>{name}</h5>

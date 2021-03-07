@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import ContactForm from "../ContactForm";
 import ContactInfo from "../ContactInfo";
 
-let ContactUsPage = ({ resetFeedbackForm }) => {
+let ContactUsPage = ({ resetFeedbackForm, postFeedback }) => {
   return (
     <div className="container">
       <Breadcrumb className="row col-12">
@@ -18,7 +18,10 @@ let ContactUsPage = ({ resetFeedbackForm }) => {
         <hr />
       </div>
       <ContactInfo />
-      <ContactForm resetFeedbackForm={resetFeedbackForm} />
+      <ContactForm
+        postFeedback={postFeedback}
+        resetFeedbackForm={resetFeedbackForm}
+      />
     </div>
   );
 };
